@@ -564,7 +564,7 @@ export default function CanvasEditor() {
         handleUpdateItems(
           items.filter((item) => !selectedId.includes(item.id)),
         );
-        setSelectedId([]);
+        setSelectedId(null);
       }
 
       // Desfazer (Ctrl+Z)
@@ -574,7 +574,7 @@ export default function CanvasEditor() {
           const previousStep = historyStep - 1;
           setItems(history[previousStep]);
           setHistoryStep(previousStep);
-          setSelectedId([]);
+          setSelectedId(null);
         }
       }
 
