@@ -48,8 +48,8 @@ const URLImage = ({
   paperHeight: number;
 }) => {
   const [img] = useImage(item.srcTransparent || item.src);
-  const shapeRef = useRef<any>();
-  const trRef = useRef<any>();
+  const shapeRef = useRef<any>(null);
+  const trRef = useRef<any>(null);
 
   const SNAP_THRESHOLD = 15; // Distância de atração em pixels
   const SNAP_SIZE = 25; // Grade padrão de fallback
@@ -555,15 +555,13 @@ export default function CanvasEditor() {
       )
         return;
 
-      // Deletar Seleção Múltipla
+      // Deletar
       if (
         (e.key === "Delete" || e.key === "Backspace") &&
-        selectedId.length > 0
+        selectedId !== null
       ) {
         e.preventDefault();
-        handleUpdateItems(
-          items.filter((item) => !selectedId.includes(item.id)),
-        );
+        handleUpdateItems(items.filter((item) => item.id !== selectedId));
         setSelectedId(null);
       }
 
@@ -581,8 +579,10 @@ export default function CanvasEditor() {
       // Copiar (Ctrl+C)
       if ((e.ctrlKey || e.metaKey) && (e.key === "c" || e.key === "C")) {
         e.preventDefault();
-        const itemsToCopy = items.filter((i) => selectedId.includes(i.id));
-        if (itemsToCopy.length > 0) setClipboard(itemsToCopy);
+        if (selectedId !== null) {
+          const itemToCopy = items.find((i) => i.id === selectedId);
+          if (itemToCopy) setClipboard([itemToCopy]); // clipboard ainda usa array, o que está correto
+        }
       }
 
       // Colar (Ctrl+V)
@@ -599,7 +599,7 @@ export default function CanvasEditor() {
 
           handleUpdateItems([...items, ...pastedItems]);
           // Seleciona automaticamente os itens recém-colados
-          setSelectedId(pastedItems.map((i) => i.id));
+          setSelectedId(pastedItems[0].id);
         }
       }
     };
