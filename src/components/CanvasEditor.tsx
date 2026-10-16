@@ -634,7 +634,7 @@ export default function CanvasEditor() {
 
       // 3. Dispara para o backend
       const API_URL =
-        process.env.API_KEY || "http://127.0.0.1:8000";
+        process.env.API_URL || "http://127.0.0.1:8000";
       const apiRes = await fetch(`${API_URL}/api/remove-background`, {
         method: "POST",
         body: formData,
